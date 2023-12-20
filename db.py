@@ -9,13 +9,19 @@ import random
 # Connect to MongoDB
 connect('bank_accounts', host='mongodb+srv://Munyin:Kelvinsam1@cluster0.bviirp8.mongodb.net/?retryWrites=true&w=majority')
 
-
 # maindb--------------------------------
 
 class Player(Document):
     name = fields.StringField(required=True)
     money = fields.IntField()
     stealCount = fields.IntField()
+
+class Item(Document):
+    name = fields.StringField()
+    attack = fields.StringField()
+    defence = fields.StringField()
+
+
 
 def create_player(name):
     player_data = {
