@@ -91,6 +91,12 @@ async def auction_command(ctx):
     price = auction()
     await ctx.send(price)
 
+@bot.command(name="itemstats")
+async def display_items(ctx):
+
+    get_stats_item("ds")
+    await ctx.send("Item stats display")
+
 
 
 #-----------------------------------------------------------------
@@ -100,5 +106,9 @@ try:
     print("Pinged your deployment. You successfully connected to MongoDB!")
 except Exception as e:
     print(e)
+
+
+
+# -------------------------
 
 bot.run("MTE3OTY5MzkzNzYzNjY5MjAyOA.G9rkp2.l4myIEQHH21JoGB0p71BqNyxMmLUmZh5nW6agI")
