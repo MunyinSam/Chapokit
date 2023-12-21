@@ -104,5 +104,5 @@ except Exception as e:
 
 # -------------------------
     
-
-bot.run("MTE3OTY5MzkzNzYzNjY5MjAyOA.GLW1yX.5as--zLkWPNYgcQP2DBREYHTc_WWBzHn2_TaQI")
+create_item("ds")
+bot.run("MTE3OTY5MzkzNzYzNjY5MjAyOA.G9rkp2.l4myIEQHH21JoGB0p71BqNyxMmLUmZh5nW6agI")

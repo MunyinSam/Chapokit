@@ -18,8 +18,8 @@ class Player(Document):
 
 class Item(Document):
     name = fields.StringField()
-    attack = fields.StringField()
-    defence = fields.StringField()
+    attack = fields.IntField()
+    defence = fields.IntField()
 
 
 
@@ -32,6 +32,14 @@ def create_player(name):
     player = Player(**player_data)
     player.save()
 
+def create_item(name):
+    Item_data = {
+        'name': name,
+        'attack' : 1000,
+        'defence' : 3
+    }
+    item = Item(**Item_data)
+    item.save()
 #-----------------------------------------
 
 def get_stats(player_name):
