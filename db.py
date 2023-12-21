@@ -54,7 +54,7 @@ def get_stats_item(item_name):
 
         return {
             "name": name,
-            "attackStats": attack,
+            "attack": attack,
             "defence": defence
         }
     

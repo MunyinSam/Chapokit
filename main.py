@@ -91,11 +91,16 @@ async def auction_command(ctx):
     price = auction()
     await ctx.send(price)
 
-@bot.command(name="itemstats")
+@bot.command(name="st")
 async def display_items(ctx):
 
-    get_stats_item("ds")
-    await ctx.send("Item stats display")
+    stats = get_stats_item("ds")
+    await ctx.send(f"Name: {stats['name']} ")
+
+    embed = discord.Embed(title=f"Stats", color= discord.Color.green())
+    embed.add_field(name="Attack", value=f"{stats['attack']}",inline=False)
+
+    await ctx.send(embed=embed)
 
 
 
