@@ -21,8 +21,6 @@ class Item(Document):
     attack = fields.IntField()
     defence = fields.IntField()
 
-
-
 def create_player(name):
     player_data = {
         'name': name,
@@ -40,7 +38,30 @@ def create_item(name):
     }
     item = Item(**Item_data)
     item.save()
+
 #-----------------------------------------
+    
+def get_stats_item(item_name):
+    
+    item = Item.objects(name=item_name).first()
+
+    if item:
+        name = item.name
+        attack = item.attack
+        defence = item.defence
+
+        print(name, attack, defence)
+
+        return {
+            "name": name,
+            "attackStats": attack,
+            "defence": defence
+        }
+    
+    else:
+        return None
+
+    
 
 def get_stats(player_name):
     #print(player_name)
@@ -52,7 +73,7 @@ def get_stats(player_name):
         stealCount = player.stealCount
         
         return {
-            "name": name,
+            "namePoeple": name,
             "balance": balance,
             "stealCount": stealCount
         }
