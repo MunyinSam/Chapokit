@@ -59,9 +59,7 @@ def get_stats_item(item_name):
         }
     
     else:
-        return None
-
-    
+        return None  
 
 def get_stats(player_name):
     #print(player_name)
@@ -141,6 +139,23 @@ def auction():
     result = str(random_number) + "000"
     pricepool = int(result)
     return pricepool
+
+
+# -------------- 100% Orange Juice -------------------------
+
+def challenge():
+    pass
+
+def start_game(first_player,second_player):
+
+    FirstTurn = random.randint(1,2)
+    
+    if FirstTurn == 1:
+        print(f"{first_player} starts first")
+        return f"{first_player} starts first"
+    else:
+        print(f"{second_player} starts first")
+        return f"{second_player} starts first"
 
 
 # Check ----------------------------------------

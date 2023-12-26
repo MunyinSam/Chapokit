@@ -91,17 +91,53 @@ async def auction_command(ctx):
     price = auction()
     await ctx.send(price)
 
-@bot.command(name="st")
-async def display_items(ctx):
+# ------------- 100% Orange Juice ------------
 
-    stats = get_stats_item("ds")
-    await ctx.send(f"Name: {stats['name']} ")
+duel_requests = {}
 
-    embed = discord.Embed(title=f"Stats", color= discord.Color.green())
-    embed.add_field(name="Attack", value=f"{stats['attack']}",inline=False)
+@bot.command(name='duel')
+async def duel(ctx, opponent: discord.Member):
+    if opponent.bot or opponent == ctx.author:
+        await ctx.send("You can't duel a bot or yourself!")
+        return
 
-    await ctx.send(embed=embed)
+    if opponent.id in duel_requests:
+        await ctx.send(f"{opponent.display_name} already has a pending duel request.")
+        return
 
+    await ctx.send(f"{opponent.mention}, you have been challenged to a duel by {ctx.author.mention}! Type '.accept' to accept the challenge.")
+
+    duel_requests[opponent.id] = ctx.author.id
+    print(duel_requests)
+    print(opponent.id)
+
+@bot.command(name='accept')
+async def accept(ctx):
+    if ctx.author.id not in duel_requests:
+        await ctx.send("You don't have any pending duel requests.")
+        return
+
+    challenger_id = duel_requests.pop(ctx.author.id)
+
+    await ctx.send(f"{ctx.author.mention} has accepted the duel challenge from <@{challenger_id}>! Let the duel begin!")
+
+# Not Related-----------------------------------------------------
+    
+@bot.event
+async def on_raw_reaction_add(payload):
+    # Check if the reaction is added to the specific message
+    if payload.message_id == 1189196722472239174:
+        # Check if the reaction emoji is the one you are looking for
+        if str(payload.emoji) == "<:thinkagain:EMOJI_ID>":
+            guild = bot.get_guild(payload.guild_id)
+            member = guild.get_member(payload.user_id)
+            print("added emoji")
+            # Check if the member already has the role
+            role = discord.utils.get(guild.roles, name="does not support racer")
+            if role and role not in member.roles:
+                # Add the role to the member
+                await member.add_roles(role)
+                print(f"Added role {role.name} to {member.display_name}")
 
 
 #-----------------------------------------------------------------
@@ -115,5 +151,6 @@ except Exception as e:
 
 
 # -------------------------
+    
 
 bot.run("MTE3OTY5MzkzNzYzNjY5MjAyOA.G9rkp2.l4myIEQHH21JoGB0p71BqNyxMmLUmZh5nW6agI")
