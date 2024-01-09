@@ -133,29 +133,23 @@ def steal_chance():
     elif chance == 100:
         return "1000"
        
-def auction():
-
-    random_number = random.randint(1, 99)
-    result = str(random_number) + "000"
-    pricepool = int(result)
-    return pricepool
-
-
 # -------------- 100% Orange Juice -------------------------
 
-def challenge():
-    pass
+def rolldice():
+    diceNum = random.randint(1,6)
+    return diceNum
 
-def start_game(first_player,second_player):
+def start_game(challenger,opponent):
 
-    FirstTurn = random.randint(1,2)
-    
-    if FirstTurn == 1:
-        print(f"{first_player} starts first")
-        return f"{first_player} starts first"
-    else:
-        print(f"{second_player} starts first")
-        return f"{second_player} starts first"
+    FirstTurn = random.randint(1, 2)
+    print(f"Random number: {FirstTurn}")
+    print(challenger, opponent)
+
+    if FirstTurn == 1: #{challenger} starts first
+        pass
+    elif FirstTurn == 2: #{opponent} starts first"
+        pass
+
 
 
 # Check ----------------------------------------

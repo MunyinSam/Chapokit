@@ -85,15 +85,12 @@ async def check_balance(ctx):
 
         await ctx.send(embed=embed)
     
-@bot.command(name='auc')
-async def auction_command(ctx):
-    
-    price = auction()
-    await ctx.send(price)
 
 # ------------- 100% Orange Juice ------------
 
 duel_requests = {}
+
+# ------------- Duel Request ------------
 
 @bot.command(name='duel')
 async def duel(ctx, opponent: discord.Member):
@@ -106,10 +103,11 @@ async def duel(ctx, opponent: discord.Member):
         return
 
     await ctx.send(f"{opponent.mention}, you have been challenged to a duel by {ctx.author.mention}! Type '.accept' to accept the challenge.")
-
-    duel_requests[opponent.id] = ctx.author.id
+    duel_requests[opponent.id] = {
+        'challenger_id': ctx.author.id,
+        'opponent_id': opponent.id
+    }
     print(duel_requests)
-    print(opponent.id)
 
 @bot.command(name='accept')
 async def accept(ctx):
@@ -117,9 +115,35 @@ async def accept(ctx):
         await ctx.send("You don't have any pending duel requests.")
         return
 
-    challenger_id = duel_requests.pop(ctx.author.id)
+    duel_info = duel_requests.pop(ctx.author.id)
+    challenger = ctx.guild.get_member(duel_info['challenger_id'])
+    opponent = ctx.guild.get_member(duel_info['opponent_id'])
 
-    await ctx.send(f"{ctx.author.mention} has accepted the duel challenge from <@{challenger_id}>! Let the duel begin!")
+    await ctx.send(f"{ctx.author.mention} has accepted the duel challenge from {challenger.mention}! Let the duel begin!")
+
+    challengerPlayer = get_stats(f'{challenger}')
+    opponentPlayer = get_stats(f'{opponent}')
+
+    embed = discord.Embed(title=f"@{challenger} Stats", color= discord.Color.green())
+    embed.set_thumbnail(url=challenger.avatar)
+    embed.add_field(name="Money Left", value=f"{challengerPlayer['balance']}",inline=False)
+    embed.add_field(name="Crimes", value=f"{challengerPlayer['stealCount']}",inline=False)
+
+    await ctx.send(embed=embed)
+
+    embed = discord.Embed(title=f"@{opponent} Stats", color= discord.Color.red())
+    embed.set_thumbnail(url=opponent.avatar)
+    embed.add_field(name="Money Left", value=f"{opponentPlayer['balance']}",inline=False)
+    embed.add_field(name="Crimes", value=f"{opponentPlayer['stealCount']}",inline=False)
+
+    await ctx.send(embed=embed)
+
+    start_game(challenger,opponent)
+
+    
+# ------------- Duel Gameplay ------------
+    
+@bot.command()
 
 # Not Related-----------------------------------------------------
     
