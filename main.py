@@ -42,6 +42,16 @@ async def create_id(ctx):
             embed.add_field(name="Crimes", value=f'{player_stats['stealCount']}')
             await ctx.send(embed=embed)
 
+            embed = discord.Embed(title=f"@{member} PvP Stats", color=discord.Color.green())
+            embed.add_field(name="Health", value=f"{player_stats['health']}", inline=True)
+            embed.add_field(name="Attack", value=f'{player_stats["attack"]}', inline=True)
+            embed.add_field(name="Defence", value=f'{player_stats["defence"]}', inline=True)
+            embed.add_field(name="Evade", value=f'{player_stats["evade"]}', inline=True)
+            embed.add_field(name="Wins", value=f'{player_stats["gamesWon"]}', inline=True)
+            embed.add_field(name="Losts", value=f'{player_stats["gamesLost"]}', inline=True)
+            await ctx.send(embed=embed)
+
+
         channel = bot.get_channel(1185891079468363796)
 
         # Check if the channel exists
