@@ -7,7 +7,7 @@ from discord.ext import commands
 import random
 
 # Connect to MongoDB
-connect('bank_accounts', host='mongodb+srv://Munyin:Kelvinsam1@cluster0.bviirp8.mongodb.net/?retryWrites=true&w=majority')
+connect('RealDB', host='mongodb+srv://Munyin:Kelvinsam1@cluster0.bviirp8.mongodb.net/?retryWrites=true&w=majority')
 
 # maindb--------------------------------
 
@@ -15,17 +15,36 @@ class Player(Document):
     name = fields.StringField(required=True)
     money = fields.IntField()
     stealCount = fields.IntField()
+    health = fields.IntField()
+    attack = fields.IntField()
+    defence = fields.IntField()
+    evade = fields.IntField()
+    gamesWon = fields.IntField()
+    gamesLost = fields.IntField()
 
 class Item(Document):
     name = fields.StringField()
     attack = fields.IntField()
     defence = fields.IntField()
 
+class FightRoom(Document):
+    roomID = fields.IntField()
+    challenger = fields.StringField()
+    opponent = fields.StringField()
+    turn = fields.IntField()
+    FirstTurn = fields.StringField()
+
 def create_player(name):
     player_data = {
         'name': name,
         'money' : 1000,
-        'stealCount' : 0
+        'stealCount' : 0,
+        'health' : 5,
+        'attack' : 2,
+        'defence' : 1,
+        'evade' : 1,
+        'gamesWon' : 0,
+        'gamesLost' : 0
     }
     player = Player(**player_data)
     player.save()
@@ -59,9 +78,7 @@ def get_stats_item(item_name):
         }
     
     else:
-        return None
-
-    
+        return None  
 
 def get_stats(player_name):
     #print(player_name)
@@ -71,11 +88,23 @@ def get_stats(player_name):
         name = player.name
         balance = player.money
         stealCount = player.stealCount
+        health = player.health
+        attack = player.attack
+        defence = player.defence
+        evade = player.evade
+        gamesWon = player.gamesWon
+        gamesLost = player.gamesLost
         
         return {
-            "namePoeple": name,
+            "name": name,
             "balance": balance,
-            "stealCount": stealCount
+            "stealCount": stealCount,
+            'health' : health,
+            'attack' : attack,
+            'defence' : defence,
+            'evade' : evade,
+            'gamesWon' : gamesWon,
+            'gamesLost' : gamesLost
         }
     else:
         return None
@@ -135,12 +164,46 @@ def steal_chance():
     elif chance == 100:
         return "1000"
        
-def auction():
+# -------------- 100% Orange Juice -------------------------
 
-    random_number = random.randint(1, 99)
-    result = str(random_number) + "000"
-    pricepool = int(result)
-    return pricepool
+def rolldice():
+    diceNum = random.randint(1,6)
+    return diceNum
+
+def doDamage(challenger, opponent):
+    pass
+
+def delete_room(roomname):
+    room = FightRoom.objects(challenger=roomname).first()
+
+def fightMenu(Player1, Player2, FirstTurn, roomID):
+    pass
+
+def start_game(challenger, opponent):
+    challenger_str = str(challenger)
+    opponent_str = str(opponent)
+
+    FirstTurn = str(random.choice([challenger_str, opponent_str]))
+    print(f"First Turn: {FirstTurn}")
+    print(challenger_str, opponent_str)
+    
+    roomNumber = random.randint(0, 9999)
+    formattedroomID = f"{roomNumber:04d}"
+    roomID = int(formattedroomID)
+
+    room_data = {
+        'roomID' : roomID,
+        'challenger': challenger_str,
+        'opponent': opponent_str,
+        'turn': 1,
+        'FirstTurn': FirstTurn
+    }
+    room = FightRoom(**room_data)
+    room.save()
+
+    fightMenu(challenger_str, opponent_str, FirstTurn, roomID)
+    return challenger_str, opponent_str, FirstTurn, roomID
+
 
 
 # Check ----------------------------------------
