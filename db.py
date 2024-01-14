@@ -28,9 +28,10 @@ class Item(Document):
     defence = fields.IntField()
 
 class FightRoom(Document):
+    roomID = fields.IntField()
     challenger = fields.StringField()
     opponent = fields.StringField()
-    turn = fields.StringField()
+    turn = fields.IntField()
     FirstTurn = fields.StringField()
 
 def create_player(name):
@@ -172,7 +173,10 @@ def rolldice():
 def doDamage(challenger, opponent):
     pass
 
-def fightMenu(Player1,Player2):
+def delete_room(roomname):
+    room = FightRoom.objects(challenger=roomname).first()
+
+def fightMenu(Player1, Player2, FirstTurn, roomID):
     pass
 
 def start_game(challenger, opponent):
@@ -182,15 +186,23 @@ def start_game(challenger, opponent):
     FirstTurn = str(random.choice([challenger_str, opponent_str]))
     print(f"First Turn: {FirstTurn}")
     print(challenger_str, opponent_str)
+    
+    roomNumber = random.randint(0, 9999)
+    formattedroomID = f"{roomNumber:04d}"
+    roomID = int(formattedroomID)
 
     room_data = {
+        'roomID' : roomID,
         'challenger': challenger_str,
         'opponent': opponent_str,
-        'turn': '1',  # Assuming turn should be a string
+        'turn': 1,
         'FirstTurn': FirstTurn
     }
     room = FightRoom(**room_data)
     room.save()
+
+    fightMenu(challenger_str, opponent_str, FirstTurn, roomID)
+    return challenger_str, opponent_str, FirstTurn, roomID
 
 
 

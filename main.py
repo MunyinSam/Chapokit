@@ -102,24 +102,24 @@ duel_requests = {}
 
 # ------------- Duel Request ------------
 
-@bot.command(name='duel')
+@bot.command(name='c')
 async def duel(ctx, opponent: discord.Member):
     if opponent.bot or opponent == ctx.author:
-        await ctx.send("You can't duel a bot or yourself!")
+        await ctx.send("Stop abusing glitches")
         return
 
     if opponent.id in duel_requests:
-        await ctx.send(f"{opponent.display_name} already has a pending duel request.")
+        await ctx.send(f"{opponent.display_name} has a pending duel request.")
         return
 
-    await ctx.send(f"{opponent.mention}, you have been challenged to a duel by {ctx.author.mention}! Type '.accept' to accept the challenge.")
+    await ctx.send(f"{opponent.mention}, you have been challenged to a fight by {ctx.author.mention}! Type '.accept' to accept.")
     duel_requests[opponent.id] = {
         'challenger_id': ctx.author.id,
         'opponent_id': opponent.id
     }
     print(duel_requests)
 
-@bot.command(name='accept')
+@bot.command(name='a')
 async def accept(ctx):
     if ctx.author.id not in duel_requests:
         await ctx.send("You don't have any pending duel requests.")
@@ -129,31 +129,73 @@ async def accept(ctx):
     challenger = ctx.guild.get_member(duel_info['challenger_id'])
     opponent = ctx.guild.get_member(duel_info['opponent_id'])
 
-    await ctx.send(f"{ctx.author.mention} has accepted the duel challenge from {challenger.mention}! Let the duel begin!")
+    await ctx.send(f"{ctx.author.mention} has accepted the duel challenge from {challenger.mention}!")
 
-    challengerPlayer = get_stats(f'{challenger}')
-    opponentPlayer = get_stats(f'{opponent}')
+    challengerPlayer = get_stats(str(challenger))
+    opponentPlayer = get_stats(str(opponent))
 
-    embed = discord.Embed(title=f"@{challenger} Stats", color= discord.Color.green())
-    embed.set_thumbnail(url=challenger.avatar)
-    embed.add_field(name="Money Left", value=f"{challengerPlayer['balance']}",inline=False)
-    embed.add_field(name="Crimes", value=f"{challengerPlayer['stealCount']}",inline=False)
+    embed_challenger = discord.Embed(title=f"@{challenger} Stats", color=discord.Color.green())
+    embed_challenger.set_thumbnail(url=challenger.avatar)
+    embed_challenger.add_field(name="Money Left", value=f"{challengerPlayer['balance']}", inline=False)
+    embed_challenger.add_field(name="Crimes", value=f"{challengerPlayer['stealCount']}", inline=False)
 
-    await ctx.send(embed=embed)
+    await ctx.send(embed=embed_challenger)
 
-    embed = discord.Embed(title=f"@{opponent} Stats", color= discord.Color.red())
-    embed.set_thumbnail(url=opponent.avatar)
-    embed.add_field(name="Money Left", value=f"{opponentPlayer['balance']}",inline=False)
-    embed.add_field(name="Crimes", value=f"{opponentPlayer['stealCount']}",inline=False)
+    embed_opponent = discord.Embed(title=f"@{opponent} Stats", color=discord.Color.red())
+    embed_opponent.set_thumbnail(url=opponent.avatar)
+    embed_opponent.add_field(name="Money Left", value=f"{opponentPlayer['balance']}", inline=False)
+    embed_opponent.add_field(name="Crimes", value=f"{opponentPlayer['stealCount']}", inline=False)
 
-    await ctx.send(embed=embed)
+    await ctx.send(embed=embed_opponent)
 
-    start_game(challenger,opponent)
+    challenger, opponent, FirstTurn, roomID = start_game(challenger, opponent)
+    print(challenger, opponent, FirstTurn, roomID)
+
+    view = View()
+
+    if FirstTurn == challenger:
+        
+        health_value = challengerPlayer['health']
+        hearts = "❤️" * health_value
+
+        embed_turn = discord.Embed(title=f"{challenger}'s turn", color=discord.Color.dark_grey())
+        embed_turn.add_field(name="Health", value=hearts, inline=False)
+
+        # Create a button with a custom ID
+        button_label = "Roll"
+        button = Button(label=button_label, style=discord.ButtonStyle.green, custom_id="roll_button")
+        view.add_item(button)
+
+        # Send the embed with the view
+        await ctx.send(embed=embed_turn, view=view)
+
+
+    else:
+
+        health_value = opponentPlayer['health']
+        hearts = "❤️" * health_value
+
+        embed_turn = discord.Embed(title=f"{opponent}'s turn", color=discord.Color.dark_grey())
+        embed_turn.add_field(name="Health", value=hearts, inline=False)
+
+        button_label = "Roll"
+        button = Button(label=button_label, style=discord.ButtonStyle.green, custom_id="roll_button")
+        view.add_item(button)
+
+        await ctx.send(embed=embed_turn, view=view)
+
 
     
 # ------------- Duel Gameplay ------------
     
-@bot.command()
+@bot.event
+async def on_button_click(interaction):
+    if interaction.custom_id == "roll_button":
+        # Simulate rolling a six-sided die
+        roll_result = random.randint(1, 6)
+
+        # Respond to the button click with the roll result
+        await interaction.respond(content=f"{interaction.user.mention} rolled a {roll_result}!")
 
 # Not Related-----------------------------------------------------
     
