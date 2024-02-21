@@ -15,6 +15,10 @@ print("Current Working Directory:", os.getcwd())
 uri = f"mongodb+srv://Munyin:Kelvinsam1@cluster0.bviirp8.mongodb.net/?retryWrites=true&w=majority"
 client = MongoClient(uri, server_api=ServerApi('1'))
 
+intents = discord.Intents.default()
+intents.members = True
+intents.voice_states = True
+
 bot = commands.Bot(command_prefix=".", intents=discord.Intents.all())
 
 #----------------------------------------------------------------------
@@ -95,6 +99,7 @@ async def check_balance(ctx):
 
         await ctx.send(embed=embed)
     
+
 
 # ------------- 100% Orange Juice ------------
 
