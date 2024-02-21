@@ -22,6 +22,10 @@ class Player(Document):
     gamesWon = fields.IntField()
     gamesLost = fields.IntField()
 
+class Student(Document):
+    name = fields.StringField(required=True)
+    TotalTime = fields.IntField()
+
 class Item(Document):
     name = fields.StringField()
     attack = fields.IntField()
@@ -49,6 +53,14 @@ def create_player(name):
     player = Player(**player_data)
     player.save()
 
+def create_student(name):
+    student_data = {
+        'name': name,
+        'TotalTime': 0
+    }
+    student = Student(**student_data)
+    student.save()
+
 def create_item(name):
     Item_data = {
         'name': name,
@@ -57,6 +69,8 @@ def create_item(name):
     }
     item = Item(**Item_data)
     item.save()
+
+
 
 #-----------------------------------------
     
@@ -218,3 +232,24 @@ def check_if_exist(player_name):
     else:
         print("Player doesn't Exist")
         return False
+    
+def check_exist(student_name):
+
+    student = Student.objects(name=student_name).first()
+
+    if student:
+        print(f"{student} exist")
+        return True
+    else:
+        print("Student doesn't exist")
+        return False
+    
+def update_time(student_name, time):
+
+    student = Student.objects(name=student_name).first()
+
+    if student:
+        student.TotalTime += int(time)
+        student.save()
+    else:
+        print("Student doesnt exist")

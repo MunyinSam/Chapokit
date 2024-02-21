@@ -38,7 +38,13 @@ async def on_voice_state_update(member, before, after):
     if before.channel is None and after.channel is not None:
         voice_channel_join_times[member.id] = datetime.now(timezone.utc)
         await channel.send(f"{member.name} joined a voice channel.")
-        print(f"{member.name} joined a voice channel.")
+
+        member = member.name
+        student_exist = check_exist(f"{member}")
+        if student_exist == True:
+            print(f"{member.name} joined a voice channel.")
+        else:
+            create_student(f"{member}")
 
     # User leaves a voice channel
     elif before.channel is not None and after.channel is None:
@@ -50,7 +56,7 @@ async def on_voice_state_update(member, before, after):
             seconds = round(duration.total_seconds())
             message = f"{member.name} left the voice channel after {minutes} minutes. {seconds} seconds"
             print(f"{member.name} left the voice channel after {minutes} minutes. {seconds} seconds")
-              
+            update_time(f"{member}", seconds)
         else:
             message = f"Could not calculate time for {member.name}."
 
