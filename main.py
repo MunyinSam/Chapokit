@@ -42,7 +42,7 @@ async def on_voice_state_update(member, before, after):
         member = member.name
         student_exist = check_exist(f"{member}")
         if student_exist == True:
-            print(f"{member.name} joined a voice channel.")
+            print(f"{member} joined a voice channel.")
         else:
             create_student(f"{member}")
 

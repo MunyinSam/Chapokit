@@ -6,6 +6,7 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 import os
 from datetime import datetime, timezone
+import asyncio
 
 from db import *
 
@@ -43,7 +44,7 @@ async def on_voice_state_update(member, before, after):
         member = member.name
         student_exist = check_exist(f"{member}")
         if student_exist == True:
-            print(f"{member.name} joined a voice channel.")
+            print(f"{member} joined a voice channel.")
         else:
             create_student(f"{member}")
 
@@ -52,12 +53,14 @@ async def on_voice_state_update(member, before, after):
         join_time = voice_channel_join_times.pop(member.id, None)
 
         if join_time:
+            await channel.send(f"{member.name} left a voice channel.")
             duration = datetime.now(timezone.utc) - join_time
             minutes = round(divmod(duration.total_seconds(), 60)[0])
             seconds = round(duration.total_seconds())
             message = f"{member.name} left the voice channel after {minutes} minutes. {seconds} seconds"
             print(f"{member.name} left the voice channel after {minutes} minutes. {seconds} seconds")
             update_time(f"{member}", seconds)
+            
         else:
             message = f"Could not calculate time for {member.name}."
 
