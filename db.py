@@ -70,8 +70,6 @@ def create_item(name):
     item = Item(**Item_data)
     item.save()
 
-
-
 #-----------------------------------------
     
 def get_stats_item(item_name):
