@@ -1,1 +1,1 @@
-o
+await ctx.send(result)

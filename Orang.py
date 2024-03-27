@@ -5,6 +5,7 @@ from discord.ext import commands
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 import os
+import random
 
 from db import *
 
@@ -22,7 +23,10 @@ bot = commands.Bot(command_prefix=".", intents=discord.Intents.all())
 #----------------------------------------------------------------------
 
 @bot.command(name="Roll")
-async def RollDice():
+async def RollDice(ctx):
+
+    roll = random.randint(1,6)
+    await ctx.send(roll)
 
 
 #-----------------------------------------------------------------
