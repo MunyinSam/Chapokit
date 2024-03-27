@@ -61,8 +61,6 @@ def get_stats_item(item_name):
     else:
         return None
 
-    
-
 def get_stats(player_name):
     #print(player_name)
     player = Player.objects(name=player_name).first()

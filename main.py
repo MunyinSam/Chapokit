@@ -7,6 +7,7 @@ from pymongo.server_api import ServerApi
 import os
 
 from db import *
+from Orang import *
 
 #----------------------------------------------------------------------
 
